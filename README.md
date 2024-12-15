@@ -18,6 +18,3 @@ A simple yet functional Flutter app for scheduling and managing tasks. Create ta
 
 ### Add Task Page
 <img src="photos/images/secondpage.png" width="400" alt="Add Task page where users input task description and date"/>
-
-### Calendar Picker
-<img src="photos/images/calender.png" width="400" alt="Calendar picker to select date and time for tasks"/>

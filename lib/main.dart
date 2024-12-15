@@ -110,6 +110,8 @@ class _HomepageState extends State<Homepage> {
           final dateTime = sortedKeys[index]; // Use the sorted key
           final task = _listTask[dateTime];
           final isCompleted = _taskCompletion[dateTime] ?? false;
+          List months =
+          ['Jan', 'Feb', 'Mar', 'Apr', 'May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
           return Card(
             elevation: 4,
@@ -122,25 +124,25 @@ class _HomepageState extends State<Homepage> {
               leading: CircleAvatar(
                 backgroundColor: Colors.teal,
                 child: Text(
-                  '${dateTime.day}',
+                  '${dateTime.year}',
                   style: const TextStyle(
                     color: Colors.white,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              title: Text(
+              subtitle: Text(
                 task!,
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              subtitle: Text(
-                '${dateTime.day}-${dateTime.month}-${dateTime.year}         ${dateTime.hour}:${dateTime.minute}',
+              title: Text(
+                '${dateTime.day}-${months[dateTime.month-1]}-${dateTime.year}     ${dateTime.hour}:${dateTime.minute}',
                 style: const TextStyle(
                   fontSize: 14,
-                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.teal,
                 ),
               ),
               onLongPress: () {
