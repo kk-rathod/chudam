@@ -12,12 +12,15 @@ class DetailScreen extends StatelessWidget {
         title: const Text(
           "Newsly",
           style: TextStyle(
-            fontFamily: "GoogleFonts.roboto().fontFamily",
+            fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
         backgroundColor: Colors.white70,
+        actions: [
+          IconButton(onPressed: (){}, icon: Icon(Icons.article_outlined))
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(

@@ -35,6 +35,7 @@ class profile extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
+            const Divider(),
 
             // Name with larger and bolder text
             const Text(
