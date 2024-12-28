@@ -1,182 +1,69 @@
+import 'package:events/saved_page.dart';
+import 'package:events/search_page.dart';
 import 'package:flutter/material.dart';
-import 'package:events/secondpage.dart';
+import 'package:events/home_page.dart';
 
 void main() {
-  runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-        brightness: Brightness.light, // Light theme by default
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData(
+      brightness: Brightness.light,
+      primaryColor: Colors.grey[400],
+      scaffoldBackgroundColor: Colors.white,
+
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.grey[200],
+        titleTextStyle: TextStyle(color: Colors.black),
+        iconTheme: IconThemeData(color: Colors.black),
       ),
-      home: Homepage(),
+
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white, backgroundColor: Colors.black, // Button text color
+          overlayColor: Colors.orange
+        ),
+      ),
+      textTheme: TextTheme(
+        bodyLarge: TextStyle(color: Colors.black), // Black text for body
+        titleMedium: TextStyle(color: Colors.black87), // Slightly darker grey for subtitles
+      ),
     ),
-  );
+    home: const Navigation(),
+  ));
 }
 
-class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+class Navigation extends StatefulWidget {
+  const Navigation({super.key});
 
   @override
-  State<Homepage> createState() => _HomepageState();
+  State<Navigation> createState() => _NavigationState();
 }
 
-class _HomepageState extends State<Homepage> {
-  Map<DateTime, String> _listTask = {};
-  Map<DateTime, bool> _taskCompletion = {};
+class _NavigationState extends State<Navigation> {
+  int _currentIndex = 0;
+
+  final List<Widget> _screens = [
+    home(),
+    search(),
+    save(),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final today = DateTime.now();
-    final formattedDate = '${today.day}-${today.month}-${today.year}'; // Format the current date
-    final sortedKeys = _listTask.keys.toList()..sort();
-
-    void _showTaskDialog(BuildContext context, DateTime dateTime) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Task Options'),
-            content: const Text('Mark this task as completed?'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    _taskCompletion[dateTime] = true; // Mark as completed
-                  });
-                  Navigator.pop(context); // Close the dialog
-                },
-                child: const Text('Task Completed'),
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    _taskCompletion[dateTime] = false; // Mark as completed
-                  });
-                  Navigator.pop(context); // Close the dialog without changes
-                },
-                child: const Text('Not Completed'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-
     return Scaffold(
-      backgroundColor: Colors.teal[50],
-      appBar: AppBar(
-        backgroundColor: Colors.teal[400],
-        foregroundColor: Colors.white,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text('Event Schedule', style: TextStyle(fontSize: 18)),
-            Text(
-              'Today: $formattedDate',
-              style: const TextStyle(fontSize: 14, color: Colors.white70),
-            ),
-          ],
-        ),
-        centerTitle: true,
-        leading: const Icon(Icons.bookmark, color: Colors.white),
-      ),
-      body: _listTask.isEmpty
-          ? Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.assignment_outlined,
-              size: 80,
-              color: Colors.grey,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'No tasks yet',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[600],
-              ),
-            ),
-          ],
-        ),
-      )
-          : ListView.builder(
-        padding: const EdgeInsets.all(8.0), // Add padding around the list
-        itemCount: _listTask.length,
-        itemBuilder: (context, index) {
-          final dateTime = sortedKeys[index]; // Use the sorted key
-          final task = _listTask[dateTime];
-          final isCompleted = _taskCompletion[dateTime] ?? false;
-          List months =
-          ['Jan', 'Feb', 'Mar', 'Apr', 'May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
-          return Card(
-            elevation: 4,
-            color: isCompleted ? Colors.teal[100] : Colors.white,
-            margin: const EdgeInsets.symmetric(vertical: 8.0), // Add spacing
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12), // Rounded corners
-            ),
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.teal,
-                child: Text(
-                  '${dateTime.year}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              subtitle: Text(
-                task!,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              title: Text(
-                '${dateTime.day}-${months[dateTime.month-1]}-${dateTime.year}     ${dateTime.hour}:${dateTime.minute}',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.teal,
-                ),
-              ),
-              onLongPress: () {
-                _showTaskDialog(context, dateTime);
-              },
-              trailing: isCompleted
-                  ? const Icon(
-                Icons.check_circle_outline_rounded,
-                color: Colors.green,
-              )
-                  : const Icon(
-                Icons.radio_button_unchecked_rounded,
-                color: Colors.grey,
-              ),
-            ),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final data = await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const addtask()),
-          );
-          if (data != null && data is Map<DateTime, String>) {
+      body: _screens[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+          onTap: (index) {
             setState(() {
-              _listTask.addAll(data);
+              _currentIndex = index;
             });
-          }
-        },
-        elevation: 10,
-        backgroundColor: Colors.teal,
-        child: const Icon(Icons.add, color: Colors.white),
-      ),
+          },
+          currentIndex: _currentIndex,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+            BottomNavigationBarItem(icon: Icon(Icons.save), label: 'Save'),
+          ]),
     );
   }
 }

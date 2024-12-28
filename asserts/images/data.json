@@ -1,0 +1,33 @@
+{
+  "articles": [
+    {
+      "source": {
+        "id": null,
+        "name": "CounterPunch"
+      },
+      "author": "Jeffrey St. Clair",
+      "title": "Hell and High Water: the Year in Climate Chaos",
+      "description": "2024 will be the warmest year on record, the year warming topped 1.5 degrees Celsius. It’s the year the US set new oil and gas production records, surpassing Saudi Arabia and Russia. It’s a year that saw the US re-elect a climate denier who vows to double US oil production over these record levels, assuming that’s even possible.",
+      "url": "https://www.counterpunch.org/2024/12/20/hell-and-high-water-the-year-in-climate-chaos/",
+      "urlToImage": "https://www.counterpunch.org/wp-content/uploads/2024/12/flaglongview-scaled.jpeg",
+      "publishedAt": "2024-12-20T06:59:11Z",
+      "content": "It’s a year that saw two of the most destructive hurricanes in US history roar back across the Gulf Coast. It’s the year a tropical cyclone demolished the French colony of Mayotte, killing as many as 10,000 people. In 2024, the temperature in Death Valley hit 130.1; Tepache, Mexico, 125.6; Aswan, Egypt, 121; Las Vegas, 120; and Redding, California, 118. Van Buren, Missouri topped 90 in February. It was the year arid regions like Valencia, Spain, the UAE, Morocco and Algeria, Roswell, New Mexico, and Moab, Utah experienced devastating floods. Storm Boris unleashed a month’s worth of rain in 24 hours on much of Europe. Meanwhile, much of the mid-Atlantic region in the US went more than a month without rain this fall. \n\nIt’s the year the UN climate conference, held in the oil city of Baku, failed to reach an agreement on phasing out fossil fuels and committed to providing less than a third of the annual climate funding needed for developing nations to transition from fossil fuels. It’s the year when CO2 levels hit 425.01 PPM, nearly 3 PPM more than last year’s record high. It’s the year when wildfires in Canada burned all year long."
+    },
+    {
+      "source": {
+        "id": null,
+        "name": "Neuwritesd.org"
+      },
+      "author": "Vani Taluja",
+      "title": "A 3D Camera for the Brain: The Simplified Science of MRI",
+      "description": "Have you ever dreamed of having Superman’s power of “X-Ray Vision,” or the ability to see through solid objects? While it is uncertain if this superpower was their motivation, medical researchers and physical scientists in the 1970s were able to turn this dre…",
+      "url": "https://neuwritesd.org/2024/12/19/a-3d-camera-for-the-brain-the-simplified-science-of-mri/",
+      "urlToImage": "https://www.counterpunch.org/wp-content/uploads/2024/12/flaglongview-scaled.jpeg",
+      "publishedAt": "2024-12-20T04:52:29Z",
+      "content": "Posted by Vani Taluja on December 19, 2024 in NeuWrite, Physics and Neuroscience | Leave a comment\r\nHave you ever dreamed of having Supermans power of X-Ray Vision, or the ability to see through soli… [+10475 chars]"
+    }
+  ],
+  "status": "ok",
+  "totalResults": 2
+}
+
