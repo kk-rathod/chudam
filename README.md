@@ -27,3 +27,17 @@ This project is about designing and implementing the UI for a **News App**. The 
 
 ### 6. **Saved Articles Screen**:
 - Screen for saved articles (empty for now).
+
+## Screenshots
+
+### Homepage
+<img src="asserts/images/home_page.png" width="616" alt="Homepage of the app"/>
+
+### Profile
+<img src="asserts/images/profile.png" width="613" alt="Profile"/>
+
+### Saved Page
+<img src="asserts/images/saved_page.png" width="617" alt="Saved page"/>
+
+### Search Page
+<img src="asserts/images/search_page.png" width="621" alt="Saved page"/>
