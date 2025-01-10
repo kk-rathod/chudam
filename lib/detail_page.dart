@@ -37,7 +37,7 @@ class DetailScreen extends StatelessWidget {
                     child: Stack(
                       children: [
                         Image.network(
-                          article['urlToImage'],
+                          article['urlToImage'] ?? 'https://th.bing.com/th/id/OIP.DZLWFqYqIG4l_yJaqOuJXgHaHa?rs=1&pid=ImgDetMain',
                           fit: BoxFit.cover,
                           width: double.infinity,
                         ),
@@ -51,7 +51,7 @@ class DetailScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(4.0),
                             ),
                             child: Text(
-                              article['source']['name'],
+                              article['source']['name'] ?? 'Unknown source',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
@@ -66,7 +66,7 @@ class DetailScreen extends StatelessWidget {
                   SizedBox(height: 12.0),
                   // Title with enhanced typography
                   Text(
-                    article['title'],
+                    article['title'] ?? 'NO title',
                     style: const TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
@@ -78,8 +78,8 @@ class DetailScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(article['author']),
-                      Text(article['publishedAt'])
+                      Text(article['author'] ?? 'Unknown author'),
+                      Text(article['publishedAt'] ?? 'Unknown time')
                     ],
                   ),
                   const Divider(),
@@ -96,7 +96,7 @@ class DetailScreen extends StatelessWidget {
                   SizedBox(height: 8.0),
                   // Article description with better padding
                   Text(
-                    article['description'],
+                    article['description'] ?? ' No description',
                     style: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.w300,
@@ -115,7 +115,7 @@ class DetailScreen extends StatelessWidget {
                   SizedBox(height: 8.0),
                   // Article description with better padding
                   Text(
-                    article['content'],
+                    article['content'] ?? 'No content',
                     style: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.w300,

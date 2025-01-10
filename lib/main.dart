@@ -5,6 +5,7 @@ import 'package:events/home_page.dart';
 
 void main() {
   runApp(MaterialApp(
+    title: "NEWSLY",
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
       brightness: Brightness.light,
