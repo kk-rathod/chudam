@@ -52,13 +52,12 @@ class _searchState extends State<search> {
       });
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Search Articles",
+          "Newsly",
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
         centerTitle: true,
@@ -70,121 +69,136 @@ class _searchState extends State<search> {
                 MaterialPageRoute(builder: (context) => const profile()),
               );
             },
-            icon: Icon(Icons.person_2_outlined),
+            icon: const Icon(Icons.person_2_outlined),
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-
-          children: [
-            TextField(
-              controller: _controller,
-              decoration: const InputDecoration(
-                labelText: 'Search for articles...',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                if (_controller.text.isNotEmpty) {
-                  searchArticles(_controller.text);
-                }
-              },
-              child: const Text('Search'),
-
-            ),
-            SizedBox(height: 20),
-            if (isLoading)
-              const Center(child: CircularProgressIndicator())
-            else if (errorMessage.isNotEmpty)
-              Center(child: Text(errorMessage, style: TextStyle(color: Colors.red)))
-            else if (searchResults.isEmpty)
-                Center(child: const Text('')),
-            if (searchResults.isNotEmpty)
-              Expanded(
-                child: ListView.builder(
-                  itemCount: searchResults.length,
-                  itemBuilder: (context, index) {
-                    final article = searchResults[index];
-                    return Card(
-                      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      elevation: 5,
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(5.0),
-                        title: Stack(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
-                              child: Image.network(
-                                article['urlToImage'] ?? 'https://th.bing.com/th/id/OIP.DZLWFqYqIG4l_yJaqOuJXgHaHa?rs=1&pid=ImgDetMain',
-                                fit: BoxFit.cover,
-                                height: 200,
-                                width: double.infinity,
-                              ),
-                            ),
-                            Positioned(
-                              top: 10,
-                              left: 10,
-                              child: Container(
-                                padding: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.6),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(
-                                  article['source']['name'] ?? 'Unknown Source',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                TextField(
+                  controller: _controller,
+                  decoration: InputDecoration(
+                    labelText: 'Search for articles...',
+                    border: const OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        if (_controller.text.isNotEmpty) {
+                          searchArticles(_controller.text);
+                        }
+                      },
+                      icon: const Icon(Icons.search_outlined),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                if (errorMessage.isNotEmpty)
+                  Center(
+                    child: Text(
+                      errorMessage,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  )
+                else if (searchResults.isNotEmpty)
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: searchResults.length,
+                      itemBuilder: (context, index) {
+                        final article = searchResults[index];
+                        return Card(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 5),
+                          elevation: 5,
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.all(5.0),
+                            title: Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child:FadeInImage.assetNetwork(
+                                    placeholder: 'assets/loading.gif', // Placeholder image
+                                    image: article['urlToImage'] ??
+                                        'https://th.bing.com/th/id/OIP.DZLWFqYqIG4l_yJaqOuJXgHaHa?rs=1&pid=ImgDetMain', // Image URL
+                                    fit: BoxFit.cover,
+                                    height: 200,
+                                    width: double.infinity,
                                   ),
                                 ),
-                              ),
+                                Positioned(
+                                  top: 10,
+                                  left: 10,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.6),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Text(
+                                      article['source']['name'] ?? "Unknown source",
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Text(
-                                article['title'] ?? 'No title available',
-                                style: const TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(article['author'] ?? 'Unknown author'),
-                                Text(article['publishedAt'] ?? 'Unknown Time')
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Text(
+                                    article['title'] ?? 'No title',
+                                    style:
+                                    const TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                const SizedBox(height: 10, ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(article['author'] ?? 'Unknown author'),
+                                    Text(article['publishedAt'] ?? 'Unknown time')
+                                  ],
+                                )
                               ],
-                            )
-                          ],
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  DetailScreen(article: article),
                             ),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      DetailScreen(article: article),
+                                ),
+                              );
+                            },
+
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          if (isLoading)
+            Container(
+              child: const Center(
+                child: CircularProgressIndicator(),
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }
+
+
+
 }

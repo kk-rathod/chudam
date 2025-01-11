@@ -1,9 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:events/saved_page.dart';
 import 'package:events/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:events/home_page.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(MaterialApp(
     title: "NEWSLY",
     debugShowCheckedModeBanner: false,

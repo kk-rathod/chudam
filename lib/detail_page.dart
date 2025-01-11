@@ -1,9 +1,97 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class DetailScreen extends StatelessWidget {
+class DetailScreen extends StatefulWidget {
   final Map<String, dynamic> article;
 
   DetailScreen({required this.article});
+
+  @override
+  State<DetailScreen> createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  bool isSaved = false;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  void checkIfSaved() async {
+    try {
+      final query = await _firestore
+          .collection('newsArticles')
+          .where('title', isEqualTo: widget.article['title']) // Use title or unique identifier
+          .get();
+
+      if (query.docs.isNotEmpty) {
+        setState(() {
+          isSaved = true;
+        });
+      }
+    } catch (e) {
+      print('Error checking saved status: $e');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    checkIfSaved(); // Check save status when the screen loads
+  }
+  Future<void> deleteArticle(BuildContext context) async {
+    try {
+      final query = await _firestore
+          .collection('newsArticles')
+          .where('title', isEqualTo: widget.article['title'])
+          .get();
+
+      for (var doc in query.docs) {
+        await doc.reference.delete();
+      }
+
+      setState(() {
+        isSaved = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Article removed from saved items.')),
+      );
+    } catch (e) {
+      print('Error deleting article: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to remove article: $e')),
+      );
+    }
+  }
+  void showDeleteConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Confirm Deletion"),
+          content: const Text("Are you sure you want to remove this article from saved items?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop(); // Close the dialog
+                await deleteArticle(context); // Proceed with deletion
+              },
+              child: const Text(
+                "Delete",
+                style: TextStyle(color: Colors.black ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +107,34 @@ class DetailScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.white70,
         actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.article_outlined))
+          IconButton(
+            onPressed: () async {
+              if (isSaved) {
+                // Show delete confirmation dialog
+                showDeleteConfirmationDialog(context);
+              } else {
+                // Save the article if not already saved
+                try {
+                  await _firestore.collection('newsArticles').add(widget.article);
+                  setState(() {
+                    isSaved = true;
+                  });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Article saved successfully!')),
+                  );
+                } catch (e) {
+                  print('Error saving article: $e');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to save article: $e')),
+                  );
+                }
+              }
+            },
+            icon: Icon(
+              isSaved ? Icons.bookmark : Icons.bookmark_outline,
+              color: Colors.black
+            ),
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -31,13 +146,13 @@ class DetailScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Image with styling and overlay text
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12.0),
                     child: Stack(
                       children: [
                         Image.network(
-                          article['urlToImage'] ?? 'https://th.bing.com/th/id/OIP.DZLWFqYqIG4l_yJaqOuJXgHaHa?rs=1&pid=ImgDetMain',
+                          widget.article['urlToImage'] ??
+                              'https://th.bing.com/th/id/OIP.DZLWFqYqIG4l_yJaqOuJXgHaHa?rs=1&pid=ImgDetMain',
                           fit: BoxFit.cover,
                           width: double.infinity,
                         ),
@@ -51,7 +166,8 @@ class DetailScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(4.0),
                             ),
                             child: Text(
-                              article['source']['name'] ?? 'Unknown source',
+                              widget.article['source']['name'] ??
+                                  'Unknown source',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
@@ -63,28 +179,26 @@ class DetailScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: 12.0),
-                  // Title with enhanced typography
+                  const SizedBox(height: 12.0),
                   Text(
-                    article['title'] ?? 'NO title',
+                    widget.article['title'] ?? 'NO title',
                     style: const TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
                     ),
                   ),
-                  SizedBox(height: 7.0),
+                  const SizedBox(height: 7.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(article['author'] ?? 'Unknown author'),
-                      Text(article['publishedAt'] ?? 'Unknown time')
+                      Text(widget.article['author'] ?? 'Unknown author'),
+                      Text(widget.article['publishedAt'] ?? 'Unknown time'),
                     ],
                   ),
                   const Divider(),
-                  SizedBox(height: 20.0),
-                  // Section title for description
+                  const SizedBox(height: 20.0),
                   const Text(
                     "Description",
                     style: TextStyle(
@@ -93,17 +207,16 @@ class DetailScreen extends StatelessWidget {
                       color: Colors.black87,
                     ),
                   ),
-                  SizedBox(height: 8.0),
-                  // Article description with better padding
+                  const SizedBox(height: 8.0),
                   Text(
-                    article['description'] ?? ' No description',
+                    widget.article['description'] ?? ' No description',
                     style: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.w300,
                       color: Colors.black87,
                     ),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   const Text(
                     "Content",
                     style: TextStyle(
@@ -112,20 +225,17 @@ class DetailScreen extends StatelessWidget {
                       color: Colors.black87,
                     ),
                   ),
-                  SizedBox(height: 8.0),
-                  // Article description with better padding
+                  const SizedBox(height: 8.0),
                   Text(
-                    article['content'] ?? 'No content',
+                    widget.article['content'] ?? 'No content',
                     style: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.w300,
                       color: Colors.black87,
                     ),
                   ),
-                  // Add a divider for extra separation
-                  Divider(),
-                  SizedBox(height: 20.0),
-
+                  const Divider(),
+                  const SizedBox(height: 20.0),
                 ],
               ),
             ),

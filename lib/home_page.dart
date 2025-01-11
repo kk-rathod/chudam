@@ -14,6 +14,7 @@ class home extends StatefulWidget {
 class _homeState extends State<home> {
   List<dynamic> articles = [];
   String selectedButton = 'Technology';
+  bool isLoading = false;
 
   // URLs for each category (update with your actual API URLs)
   final Map<String, String> categoryUrls = <String, String>{
@@ -23,6 +24,10 @@ class _homeState extends State<home> {
   };
 
   Future<void> loadArticles() async {
+    setState(() {
+      isLoading = true; // Set loading state to true when fetching articles
+    });
+
     final url = categoryUrls[selectedButton]!;
 
     try {
@@ -128,85 +133,87 @@ class _homeState extends State<home> {
               ),
             ),
             const Divider(thickness: 1),
-            Expanded(
-              child: ListView.builder(
-                itemCount: articles.length,
-                itemBuilder: (context, index) {
-                  final article = articles[index];
-                  return Card(
-                    margin:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    elevation: 5,
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.all(5.0),
-                      title: Stack(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Image.network(
-                              article['urlToImage'] ?? 'https://th.bing.com/th/id/OIP.DZLWFqYqIG4l_yJaqOuJXgHaHa?rs=1&pid=ImgDetMain' ,
-                              fit: BoxFit.cover,
-                              height: 200,
-                              width: double.infinity,
-                            ),
-                          ),
-                          Positioned(
-                            top: 10,
-                            left: 10,
-                            child: Container(
-                              padding: const EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.6),
-                                borderRadius: BorderRadius.circular(4),
+
+
+              Expanded(
+                child: ListView.builder(
+                  itemCount: articles.length,
+                  itemBuilder: (context, index) {
+                    final article = articles[index];
+                    return Card(
+                      margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      elevation: 5,
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.all(5.0),
+                        title: Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Image.network(
+                                article['urlToImage'] ?? 'https://th.bing.com/th/id/OIP.DZLWFqYqIG4l_yJaqOuJXgHaHa?rs=1&pid=ImgDetMain' ,
+                                fit: BoxFit.cover,
+                                height: 200,
+                                width: double.infinity,
                               ),
-                              child: Text(
-                                article['source']['name'] ?? "Unknown source",
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
+                            ),
+                            Positioned(
+                              top: 10,
+                              left: 10,
+                              child: Container(
+                                padding: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.6),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(
+                                  article['source']['name'] ?? "Unknown source",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              article['title'] ?? 'No title',
-                              style:
-                              const TextStyle(fontWeight: FontWeight.bold),
+                          ],
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                article['title'] ?? 'No title',
+                                style:
+                                const TextStyle(fontWeight: FontWeight.bold),
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 10, ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(article['author'] ?? 'Unknown author'),
-                              Text(article['publishedAt'] ?? 'Unknown time')
-                            ],
-                          )
-                        ],
+                            const SizedBox(height: 10, ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(article['author'] ?? 'Unknown author'),
+                                Text(article['publishedAt'] ?? 'Unknown time')
+                              ],
+                            )
+                          ],
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  DetailScreen(article: article),
+                            ),
+                          );
+                        },
                       ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                DetailScreen(article: article),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
           ],
         ),
       ),
