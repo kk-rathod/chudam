@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void _navigateToNextScreen() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('sign_or_login') ?? false;
-    await Future.delayed(const Duration(seconds: 10));
+    await Future.delayed(const Duration(seconds: 4));
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => isLoggedIn ? const NavigationPage() : const LoginPage()),

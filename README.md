@@ -6,27 +6,37 @@ This project is about designing and implementing the UI for a **News App**. The 
 
 ## Features
 
-### 1. **Home Page**:
-- Displays a list of articles with:
-    - Title, source, time ago, thumbnail image, and author.
-- Categories buttons (e.g., "Technology," "Sports," "Politics").
-- Profile button to go to the Profile Screen.
+# My App - User Authentication and Profile Management
 
-### 2. **Bottom Navigation Drawer**:
-- Navigation bar for **Home**, **Search**, and **Saved Articles**.
+## Description
+This is a Flutter app that allows users to log in using either their email/password or Google account. It provides functionality for accessing the Home page, searching content, saving content for later, and managing user profiles. The app also includes features to update and log out of the profile.
 
-### 3. **Detail Screen**:
-- Shows full article details when clicked, including:
-    - Title, author, description, source, published date, and image.
+## Features
+### 1. **User Authentication**
+  - Users can log in with their email and password using Firebase Authentication.
+  - Google Sign-In is also supported for a quicker login experience.
 
-### 4. **Profile Screen**:
-- Displays user's info: profile picture, name, and bio.
+### 2. **Splash Screen**
+  - Displays a logo when the app is launched, followed by navigation based on the user's login status.
 
-### 5. **Search Screen**:
-- A search screen with a **TextInput** field.
+### 3. **Navigation**
+  - Smooth transition between pages such as Login, Home, Search, Profile, and Update Profile pages depending on user authentication status.
 
-### 6. **Saved Articles Screen**:
-- Screen for saved articles (empty for now).
+### 4. **Home Page**
+  - The main content of the app is displayed here. It can show articles, news, or any other relevant content to the user.
+
+### 5. **Search Page**
+  - Users can search for content within the app using a search bar.
+
+### 6. **Save Page**
+  - Allows users to save articles or items for later viewing.
+
+### 7. **Profile Page**
+  - Displays user account information.
+  - Includes a **Sign-Out** button for logging out of the app.
+
+### 8. **Update Profile Page**
+  - Users can update their personal details such as name, email, and profile picture.
 
 ## Screenshots
 ### SplashPage
@@ -41,8 +51,11 @@ This project is about designing and implementing the UI for a **News App**. The 
 ### Homepage
 <img src="asserts/images/home.png" width="424" alt="Homepage of the app"/>
 
+### Detail Page
+<img src="asserts/images/detail%20page.png" width="416" alt="Detail page"/>
+
 ### Search Page
-<img src="asserts/images/search.png" width="417" alt="Saved page"/>
+<img src="asserts/images/search.png" width="417" alt="Search page"/>
 
 ### Saved Page
 <img src="asserts/images/saved.png" width="419" alt="Saved page"/>
@@ -51,5 +64,5 @@ This project is about designing and implementing the UI for a **News App**. The 
 <img src="asserts/images/profile.png" width="424" alt="Profile"/>
 
 ### Update Profile Page
-<img src="asserts/images/update_prf.png" width="413" alt="Saved page"/>
+<img src="asserts/images/update_prf.png" width="413" alt="Update profile page"/>
 
