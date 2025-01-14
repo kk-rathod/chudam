@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:events/update_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'login_page.dart';
+
 class profile extends StatefulWidget {
-  const profile({Key? key}) : super(key: key);
+  const profile({super.key});
 
   @override
   State<profile> createState() => _ProfileState();
@@ -35,11 +38,10 @@ class _ProfileState extends State<profile> {
   }
 
   // Update profile data
-  void _updateProfile(String newName, String newEmail, String newDescription,
+  void _updateProfile(String newName, String newDescription,
       String newUrl) async {
     setState(() {
       name = newName;
-      email = newEmail;
       description = newDescription;
       url = newUrl;
     });
@@ -47,7 +49,6 @@ class _ProfileState extends State<profile> {
     // Save updated data to SharedPreferences
     SharedPreferences pref = await SharedPreferences.getInstance();
     await pref.setString('name', newName);
-    await pref.setString('email', newEmail);
     await pref.setString('description', newDescription);
     await pref.setString('url', newUrl);
   }
@@ -77,7 +78,26 @@ class _ProfileState extends State<profile> {
                 ),
               );
             },
-          )
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              SharedPreferences pref = await SharedPreferences.getInstance();
+              await pref.setBool('sign_or_login',false);
+              await pref.remove('name');
+              await pref.remove('email');
+              await pref.remove('description');
+              await pref.remove('url');
+              await FirebaseAuth.instance.signOut();
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+                    (Route<dynamic> route) => false, // Remove all previous routes except the login page
+              );
+
+            },
+          ),
+
         ],
       ),
       body: Padding(

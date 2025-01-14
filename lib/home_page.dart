@@ -4,6 +4,7 @@ import 'package:events/detail_page.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+
 class home extends StatefulWidget {
   const home({super.key});
 
@@ -15,20 +16,24 @@ class _homeState extends State<home> {
   List<dynamic> articles = [];
   String selectedButton = 'Technology';
   bool isLoading = false;
+  final List<String> categories = [
+    'Technology',
+    'Health',
+    'Sports',
+    'Science',
+    'Politics',
+    'Business',
+    'Entertainment',
+    'General',
+  ];
 
-  // URLs for each category (update with your actual API URLs)
-  final Map<String, String> categoryUrls = <String, String>{
-    'Technology': 'https://newsapi.org/v2/top-headlines?category=technology&apiKey=b677b5097965477789753d46e8432683',
-    'Sports': 'https://newsapi.org/v2/top-headlines?category=sports&apiKey=b677b5097965477789753d46e8432683',
-    'Politics': 'https://newsapi.org/v2/top-headlines?category=politics&apiKey=b677b5097965477789753d46e8432683',
-  };
 
-  Future<void> loadArticles() async {
+  Future<void> loadArticles(String query) async {
     setState(() {
       isLoading = true; // Set loading state to true when fetching articles
     });
 
-    final url = categoryUrls[selectedButton]!;
+    final url = 'https://newsapi.org/v2/everything?q=$query&apiKey=b677b5097965477789753d46e8432683';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -52,13 +57,13 @@ class _homeState extends State<home> {
       selectedButton = buttonText;
       articles = []; // Clear the existing articles
     });
-    loadArticles(); // Fetch new articles for the selected category
+    loadArticles(buttonText); // Fetch new articles for the selected category
   }
 
   @override
   void initState() {
     super.initState();
-    loadArticles(); // Load articles for the initial category (Technology)
+    loadArticles(selectedButton); // Load articles for the initial category (Technology)
   }
 
   @override
@@ -88,53 +93,38 @@ class _homeState extends State<home> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () => onButtonPressed('Technology'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: selectedButton == 'Technology'
-                          ? Colors.black
-                          : Colors.grey,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
+            const SizedBox(height: 10),
+            SizedBox(
+              height: 30,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: categories.length,
+                itemBuilder: (context, index) {
+                  final category = categories[index];
+                  final isSelected = selectedButton == category;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: ElevatedButton(
+                      onPressed: () => onButtonPressed(category),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                        isSelected ? Colors.black : Colors.grey[300],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                      ),
+                      child: Text(
+                        category,
+                        style: TextStyle(
+                          color: isSelected ? Colors.white : Colors.black,
+                        ),
                       ),
                     ),
-                    child: const Text('Technology'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => onButtonPressed('Sports'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: selectedButton == 'Sports'
-                          ? Colors.black
-                          : Colors.grey,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                    ),
-                    child: const Text('Sports'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => onButtonPressed('Politics'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: selectedButton == 'Politics'
-                          ? Colors.black
-                          : Colors.grey,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                    ),
-                    child: const Text('Politics'),
-                  )
-                ],
+                  );
+                },
               ),
             ),
             const Divider(thickness: 1),
-
-
               Expanded(
                 child: ListView.builder(
                   itemCount: articles.length,
@@ -220,3 +210,4 @@ class _homeState extends State<home> {
     );
   }
 }
+

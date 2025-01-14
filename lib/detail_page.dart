@@ -1,12 +1,10 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class DetailScreen extends StatefulWidget {
   final Map<String, dynamic> article;
 
-  DetailScreen({required this.article});
+  const DetailScreen({super.key, required this.article});
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();

@@ -1,33 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'signup_page.dart';
-import 'package:events/navigation_page.dart';
+import 'login_page.dart';
+import 'navigation_page.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignupPage extends StatefulWidget {
+  const SignupPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignupPage> createState() => _SignupPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignupPageState extends State<SignupPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String _errorMessage = '';
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  Future<void> _login() async {
+  Future<void> _signup() async {
     try {
-      if (_emailController.text.trim().isEmpty || _passwordController.text.trim().isEmpty) {
-        throw FirebaseAuthException(
-          code: 'empty-fields',
-          message: 'Email and password cannot be empty.',
-        );
-      }
-
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
@@ -38,39 +29,7 @@ class _LoginPageState extends State<LoginPage> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => NavigationPage()),
-      );
-    } on FirebaseAuthException catch (e) {
-      String errorMessage;
-      switch (e.code) {
-        case 'user-not-found':
-          errorMessage = 'No user found with this email.';
-          break;
-        case 'wrong-password':
-          errorMessage = 'Incorrect password. Please try again.';
-          break;
-        case 'invalid-email':
-          errorMessage = 'The email address is not valid.';
-          break;
-        case 'empty-fields':
-          errorMessage = e.message!;
-          break;
-        default:
-          errorMessage = 'An unexpected error occurred. Please try again later.';
-      }
-
-      setState(() {
-        _errorMessage = errorMessage;
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            _errorMessage,
-            style: const TextStyle(color: Colors.blueGrey),
-          ),
-          backgroundColor: Colors.white,
-        ),
+        MaterialPageRoute(builder: (context) => const NavigationPage()),
       );
     } catch (e) {
       setState(() {
@@ -81,45 +40,7 @@ class _LoginPageState extends State<LoginPage> {
         SnackBar(
           content: Text(
             'Oops! Something went wrong: $_errorMessage',
-            style: const TextStyle(color: Colors.blueGrey),
-          ),
-          backgroundColor: Colors.white,
-        ),
-      );
-    }
-  }
-
-  Future<void> _signInWithGoogle() async {
-    try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) throw Exception('Google sign-in was canceled.');
-
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final OAuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      await FirebaseAuth.instance.signInWithCredential(credential);
-
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('sign_or_login', true);
-      await prefs.setString('email', googleUser.email);
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => NavigationPage()),
-      );
-    } catch (e) {
-      setState(() {
-        _errorMessage = e.toString();
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Oops! Something went wrong: $_errorMessage',
-            style: const TextStyle(color: Colors.blueGrey),
+            style: const TextStyle(color: Colors.deepPurpleAccent),
           ),
           backgroundColor: Colors.white,
         ),
@@ -131,15 +52,15 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Login",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
+          title: const Text(
+            "SignIn",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
           ),
-        ),
-        centerTitle: true,
-        leading: Icon(Icons.login_rounded),
+          centerTitle: true,
+          leading: Icon(Icons.login_rounded)
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -198,28 +119,22 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: _login,
-              child: const Text("Login"),
+              onPressed: _signup,
+              child: const Text("Sign Up"),
             ),
+            const SizedBox(height: 10),
             TextButton(
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => SignupPage()),
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
                 );
               },
               child: const Text(
-                "Don't have an account? Sign up",
+                "Already have an account? Login",
                 style: TextStyle(color: Colors.black),
               ),
             ),
-            const SizedBox(height: 50),
-            const Divider(),
-            ElevatedButton(
-              onPressed: _signInWithGoogle,
-              child: const Icon(Icons.g_mobiledata),
-            ),
-            const Text("sign in via Google"),
           ],
         ),
       ),

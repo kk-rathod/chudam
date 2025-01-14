@@ -1,13 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:events/saved_page.dart';
-import 'package:events/search_page.dart';
+
+import 'package:events/splash_page.dart';
 import 'package:flutter/material.dart';
-import 'package:events/home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
 
   runApp(MaterialApp(
     title: "NEWSLY",
@@ -19,57 +20,22 @@ Future<void> main() async {
 
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.grey[200],
-        titleTextStyle: TextStyle(color: Colors.black),
-        iconTheme: IconThemeData(color: Colors.black),
+        titleTextStyle: const TextStyle(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
 
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white, backgroundColor: Colors.black, // Button text color
-          overlayColor: Colors.orange
+            foregroundColor: Colors.white, backgroundColor: Colors.black, // Button text color
+            overlayColor: Colors.orange
         ),
       ),
-      textTheme: TextTheme(
+      textTheme: const TextTheme(
         bodyLarge: TextStyle(color: Colors.black), // Black text for body
         titleMedium: TextStyle(color: Colors.black87), // Slightly darker grey for subtitles
       ),
     ),
-    home: const Navigation(),
+    home: SplashScreen(),
   ));
 }
 
-class Navigation extends StatefulWidget {
-  const Navigation({super.key});
-
-  @override
-  State<Navigation> createState() => _NavigationState();
-}
-
-class _NavigationState extends State<Navigation> {
-  int _currentIndex = 0;
-
-  final List<Widget> _screens = [
-    home(),
-    search(),
-    save(),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-          currentIndex: _currentIndex,
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-            BottomNavigationBarItem(icon: Icon(Icons.save), label: 'Save'),
-          ]),
-    );
-  }
-}

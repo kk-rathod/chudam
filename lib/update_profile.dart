@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UpdateProfile extends StatefulWidget {
-  final Function(String, String, String, String) onUpdateProfile;
+  final Function(String, String, String) onUpdateProfile;
 
   const UpdateProfile({
-    Key? key,
+    super.key,
     required this.onUpdateProfile,
-  }) : super(key: key);
+  });
 
   @override
   State<UpdateProfile> createState() => _UpdateProfileState();
@@ -15,7 +15,6 @@ class UpdateProfile extends StatefulWidget {
 
 class _UpdateProfileState extends State<UpdateProfile> {
   late TextEditingController nameController;
-  late TextEditingController emailController;
   late TextEditingController descriptionController;
   late TextEditingController urlController;
 
@@ -23,7 +22,6 @@ class _UpdateProfileState extends State<UpdateProfile> {
   void initState() {
     super.initState();
     nameController = TextEditingController();
-    emailController = TextEditingController();
     descriptionController = TextEditingController();
     urlController = TextEditingController();
     _loadProfile();
@@ -34,7 +32,6 @@ class _UpdateProfileState extends State<UpdateProfile> {
     setState(() {
       nameController.text = prefs.getString('name') ?? '';
       descriptionController.text = prefs.getString('description') ?? '';
-      emailController.text = prefs.getString('email') ?? '';
       urlController.text = prefs.getString('url') ??
           'https://th.bing.com/th/id/OIP.4nF9zdAz6qdA0XM2T16_CgHaNK?rs=1&pid=ImgDetMain';
     });
@@ -43,14 +40,12 @@ class _UpdateProfileState extends State<UpdateProfile> {
   Future<void> _saveProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('name', nameController.text);
-    await prefs.setString('email', emailController.text);
     await prefs.setString('description', descriptionController.text);
     await prefs.setString('url', urlController.text);
 
     // Call the onUpdateProfile callback to pass the data back
     widget.onUpdateProfile(
       nameController.text,
-      emailController.text,
       descriptionController.text,
       urlController.text,
     );
@@ -61,7 +56,6 @@ class _UpdateProfileState extends State<UpdateProfile> {
   @override
   void dispose() {
     nameController.dispose();
-    emailController.dispose();
     descriptionController.dispose();
     urlController.dispose();
     super.dispose();
@@ -93,18 +87,6 @@ class _UpdateProfileState extends State<UpdateProfile> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 suffixIcon: const Icon(Icons.person),
-              ),
-            ),
-            const SizedBox(height: 12.0),
-            TextField(
-              controller: emailController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                hintText: 'Email',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                suffixIcon: const Icon(Icons.alternate_email_outlined),
               ),
             ),
             const SizedBox(height: 12.0),

@@ -1,280 +1,76 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:events/saved_page.dart';
+import 'package:events/search_page.dart';
 import 'package:flutter/material.dart';
-import 'package:events/profile_page.dart';
-import 'package:events/detail_page.dart';
-import 'dart:convert';
+import 'package:events/home_page.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-class home extends StatefulWidget {
-  const home({super.key});
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-  @override
-  State<home> createState() => _homeState();
+  await Firebase.initializeApp();
+
+  runApp(MaterialApp(
+    title: "NEWSLY",
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData(
+      brightness: Brightness.light,
+      primaryColor: Colors.grey[400],
+      scaffoldBackgroundColor: Colors.white,
+
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.grey[200],
+        titleTextStyle: TextStyle(color: Colors.black),
+        iconTheme: IconThemeData(color: Colors.black),
+      ),
+
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white, backgroundColor: Colors.black, // Button text color
+          overlayColor: Colors.orange
+        ),
+      ),
+      textTheme: TextTheme(
+        bodyLarge: TextStyle(color: Colors.black), // Black text for body
+        titleMedium: TextStyle(color: Colors.black87), // Slightly darker grey for subtitles
+      ),
+    ),
+    home: const Navigation(),
+  ));
 }
 
-class _homeState extends State<home> {
-  List<dynamic> articles = [];
-  String selectedButton = 'Technology';
-
-  void onButtonPressed(String buttonText) {
-    setState(() {
-      selectedButton = buttonText;
-    });
-  }
-
-  // Method to fetch JSON data
-  Future<void> loadArticles() async {
-    final jsonString = await DefaultAssetBundle.of(context)
-        .loadString('asserts/images/data.json');
-    final data = json.decode(jsonString); // Parse the JSON
-    setState(() {
-      articles = data['articles']; // Assign articles to the state variable
-    });
-  }
+class Navigation extends StatefulWidget {
+  const Navigation({super.key});
 
   @override
-  void initState() {
-    super.initState();
-    loadArticles(); // Load JSON when the screen initializes
-  }
+  State<Navigation> createState() => _NavigationState();
+}
+
+class _NavigationState extends State<Navigation> {
+  int _currentIndex = 0;
+
+  final List<Widget> _screens = [
+    home(),
+    search(),
+    save(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Newsly",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-        centerTitle: true,
-        leading: Icon(Icons.newspaper),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const profile()));
-            },
-            icon: Icon(Icons.person_2_outlined),
-          ),
-        ],
-      ),
-      body: Card(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () => onButtonPressed('Technology'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: selectedButton == 'Technology'
-                          ? Colors.black
-                          : Colors.grey,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                    ),
-                    child: const Text('Technology'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => onButtonPressed('Sports'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: selectedButton == 'Sports'
-                          ? Colors.black
-                          : Colors.grey,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                    ),
-                    child: const Text('Sports'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => onButtonPressed('Politics'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: selectedButton == 'Politics'
-                          ? Colors.black
-                          : Colors.grey,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                    ),
-                    child: const Text('Politics'),
-                  )
-                ],
-              ),
-            ),
-            const Divider(thickness: 1),
-            Expanded(
-              child: ListView.builder(
-                itemCount: articles.length,
-                itemBuilder: (context, index) {
-                  final article = articles[index];
-                  return Card(
-                    margin:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    elevation: 5,
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.all(5.0),
-                      title: Stack(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Image.network(
-                              article['urlToImage'],
-                              fit: BoxFit.cover,
-                              height: 200,
-                              width: double.infinity,
-                            ),
-                          ),
-                          Positioned(
-                            top: 10,
-                            left: 10,
-                            child: Container(
-                              padding: const EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.6),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Text(
-                                article['source']['name'],
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              article['title'],
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          const SizedBox(height: 10,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(article['author']),
-                              Text(article['publishedAt'])
-                            ],
-                          )
-                        ],
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                DetailScreen(article: article),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-///
-import 'package:flutter/material.dart';
-import 'package:events/profile_page.dart';
-
-class save extends StatelessWidget {
-  const save({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return
-        Scaffold(
-          appBar: AppBar(
-            title: const Text(
-              "Newsly",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
-            centerTitle: true,
-            leading: Icon(Icons.save),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const profile()));
-                },
-                icon: Icon(Icons.person_2_outlined),
-              ),
-            ],
-          ),
-          body: const Center(
-            child: Text('No saved articles yet!'),
-          ),
-        );
-
-  }
-}
-////
-
-
-
-
-import 'package:flutter/material.dart';
-import 'package:events/profile_page.dart';
-
-class search extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Newsly",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-        centerTitle: true,
-        leading: Icon(Icons.search),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const profile()));
-            },
-            icon: Icon(Icons.person_2_outlined),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextField(
-          decoration: InputDecoration(
-            hintText: 'Search here',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(25.0),
-            ),
-            suffixIcon: const Icon(Icons.arrow_forward),
-          ),
-        ),
-      ),
+      body: _screens[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          currentIndex: _currentIndex,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+            BottomNavigationBarItem(icon: Icon(Icons.save), label: 'Save'),
+          ]),
     );
   }
 }

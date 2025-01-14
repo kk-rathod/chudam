@@ -61,6 +61,7 @@ class _searchState extends State<search> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
         centerTitle: true,
+        leading: Icon(Icons.search),
         actions: [
           IconButton(
             onPressed: () {
@@ -189,10 +190,8 @@ class _searchState extends State<search> {
             ),
           ),
           if (isLoading)
-            Container(
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
+            const Center(
+              child: CircularProgressIndicator(),
             ),
         ],
       ),
