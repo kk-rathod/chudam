@@ -29,15 +29,27 @@ This project is about designing and implementing the UI for a **News App**. The 
 - Screen for saved articles (empty for now).
 
 ## Screenshots
+### SplashPage
+<img src="asserts/images/Splash.png" width="414" alt="Splashpage of the app"/>
+
+### LoginPage
+<img src="asserts/images/login.png" width="415" alt="LoginPage of the app"/>
+
+### Sign In
+<img src="asserts/images/signin.png" width="420" alt="Sign In Page of the app"/>
 
 ### Homepage
-<img src="asserts/images/home_page.png" width="616" alt="Homepage of the app"/>
-
-### Profile
-<img src="asserts/images/profile.png" width="613" alt="Profile"/>
-
-### Saved Page
-<img src="asserts/images/saved_page.png" width="617" alt="Saved page"/>
+<img src="asserts/images/home.png" width="424" alt="Homepage of the app"/>
 
 ### Search Page
-<img src="asserts/images/search_page.png" width="621" alt="Saved page"/>
+<img src="asserts/images/search.png" width="417" alt="Saved page"/>
+
+### Saved Page
+<img src="asserts/images/saved.png" width="419" alt="Saved page"/>
+
+### Profile
+<img src="asserts/images/profile.png" width="424" alt="Profile"/>
+
+### Update Profile Page
+<img src="asserts/images/update_prf.png" width="413" alt="Saved page"/>
+

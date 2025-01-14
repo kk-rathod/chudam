@@ -100,7 +100,7 @@ class _searchState extends State<search> {
                   Center(
                     child: Text(
                       errorMessage,
-                      style: const TextStyle(color: Colors.red),
+                      style: const TextStyle(color: Colors.black),
                     ),
                   )
                 else if (searchResults.isNotEmpty)

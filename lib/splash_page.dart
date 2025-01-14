@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'login_page.dart'; // Import your login page
-import 'navigation_page.dart'; // Import your navigation page
+import 'login_page.dart';
+import 'navigation_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void _navigateToNextScreen() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('sign_or_login') ?? false;
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 10));
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => isLoggedIn ? const NavigationPage() : const LoginPage()),
