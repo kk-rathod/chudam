@@ -30,7 +30,7 @@ class _homeState extends State<home> {
 
   Future<void> loadArticles(String query) async {
     setState(() {
-      isLoading = true; // Set loading state to true when fetching articles
+      isLoading = true;
     });
 
     final url = 'https://newsapi.org/v2/everything?q=$query&apiKey=b677b5097965477789753d46e8432683';
@@ -39,15 +39,15 @@ class _homeState extends State<home> {
       final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body); // Parse the JSON
+        final data = json.decode(response.body);
         setState(() {
-          articles = data['articles']; // Assign articles to the state variable
+          articles = data['articles'];
         });
       } else {
         throw Exception('Failed to load data');
       }
     } catch (e) {
-      // Handle errors if needed
+
       print('Error: $e');
     }
   }
@@ -55,15 +55,15 @@ class _homeState extends State<home> {
   void onButtonPressed(String buttonText) {
     setState(() {
       selectedButton = buttonText;
-      articles = []; // Clear the existing articles
+      articles = [];
     });
-    loadArticles(buttonText); // Fetch new articles for the selected category
+    loadArticles(buttonText);
   }
 
   @override
   void initState() {
     super.initState();
-    loadArticles(selectedButton); // Load articles for the initial category (Technology)
+    loadArticles(selectedButton); 
   }
 
   @override
@@ -78,7 +78,6 @@ class _homeState extends State<home> {
           ),
         ),
         centerTitle: true,
-        leading: Icon(Icons.newspaper),
         actions: [
           IconButton(
             onPressed: () {

@@ -18,7 +18,6 @@ class save extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        leading: const Icon(Icons.save),
         actions: [
           IconButton(
             onPressed: () {
@@ -119,7 +118,7 @@ class save extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => DetailScreen(
-                          article: article.data() as Map<String, dynamic>, // Correctly pass individual article
+                          article: article.data() as Map<String, dynamic>,
                         ),
                       ),
                     );

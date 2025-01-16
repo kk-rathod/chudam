@@ -17,11 +17,10 @@ class _SplashScreenState extends State<SplashScreen> {
     _navigateToNextScreen();
   }
 
-  // Function to navigate to the next screen after 3 seconds
   void _navigateToNextScreen() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('sign_or_login') ?? false;
-    await Future.delayed(const Duration(seconds: 4));
+    await Future.delayed(const Duration(seconds: 3));
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => isLoggedIn ? const NavigationPage() : const LoginPage()),

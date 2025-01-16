@@ -62,7 +62,7 @@ class _SignupPageState extends State<SignupPage> {
           centerTitle: true,
           leading: Icon(Icons.login_rounded)
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

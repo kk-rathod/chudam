@@ -61,7 +61,6 @@ class _searchState extends State<search> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
         centerTitle: true,
-        leading: Icon(Icons.search),
         actions: [
           IconButton(
             onPressed: () {
@@ -85,15 +84,13 @@ class _searchState extends State<search> {
                   decoration: InputDecoration(
                     labelText: 'Search for articles...',
                     border: const OutlineInputBorder(),
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        if (_controller.text.isNotEmpty) {
-                          searchArticles(_controller.text);
-                        }
-                      },
-                      icon: const Icon(Icons.search_outlined),
-                    ),
+                    suffixIcon: const Icon(Icons.search_outlined),
                   ),
+                  onEditingComplete: (){
+                    if (_controller.text.isNotEmpty) {
+                      searchArticles(_controller.text);
+                    }
+                  },
                 ),
                 const SizedBox(height: 20),
                 if (errorMessage.isNotEmpty)
